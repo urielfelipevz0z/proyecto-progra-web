@@ -9,41 +9,177 @@
       <!-- Add New Pump Form -->
       <div class="add-pump-form">
         <h2>Add New Pump</h2>
-        <form @submit.prevent="addPump">
-          <div class="form-group">
-            <label for="pumpName">Pump Name</label>
-            <input 
-              type="text" 
-              id="pumpName" 
-              v-model="newPump.name" 
-              required
-              placeholder="Enter pump name"
-            >
+        <form @submit.prevent="addPump" class="technical-form">
+          <div class="form-section">
+            <h3>Basic Information</h3>
+            <div class="form-group">
+              <label for="pumpName">Pump Name</label>
+              <input 
+                type="text" 
+                id="pumpName" 
+                v-model="newPump.name" 
+                required
+                placeholder="Enter pump name"
+              >
+            </div>
+            <div class="form-group">
+              <label for="pumpLocation">Location</label>
+              <input 
+                type="text" 
+                id="pumpLocation" 
+                v-model="newPump.location" 
+                required
+                placeholder="Enter pump location"
+              >
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="manufacturer">Manufacturer</label>
+                <input 
+                  type="text" 
+                  id="manufacturer" 
+                  v-model="newPump.manufacturer" 
+                  required
+                  placeholder="Enter manufacturer"
+                >
+              </div>
+              <div class="form-group">
+                <label for="model">Model</label>
+                <input 
+                  type="text" 
+                  id="model" 
+                  v-model="newPump.model" 
+                  required
+                  placeholder="Enter model"
+                >
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="pumpLocation">Location</label>
-            <input 
-              type="text" 
-              id="pumpLocation" 
-              v-model="newPump.location" 
-              required
-              placeholder="Enter pump location"
-            >
+
+          <div class="form-section">
+            <h3>Technical Specifications</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pumpCapacity">Capacity (L/min)</label>
+                <input 
+                  type="number" 
+                  id="pumpCapacity" 
+                  v-model="newPump.capacity" 
+                  required
+                  min="0"
+                  step="0.1"
+                >
+              </div>
+              <div class="form-group">
+                <label for="powerRating">Power Rating (kW)</label>
+                <input 
+                  type="number" 
+                  id="powerRating" 
+                  v-model="newPump.powerRating" 
+                  required
+                  min="0"
+                  step="0.1"
+                >
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="voltage">Voltage (V)</label>
+                <input 
+                  type="number" 
+                  id="voltage" 
+                  v-model="newPump.voltage" 
+                  required
+                  min="0"
+                >
+              </div>
+              <div class="form-group">
+                <label for="current">Current (A)</label>
+                <input 
+                  type="number" 
+                  id="current" 
+                  v-model="newPump.current" 
+                  required
+                  min="0"
+                  step="0.1"
+                >
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="maxPressure">Maximum Pressure (PSI)</label>
+                <input 
+                  type="number" 
+                  id="maxPressure" 
+                  v-model="newPump.maxPressure" 
+                  required
+                  min="0"
+                >
+              </div>
+              <div class="form-group">
+                <label for="minPressure">Minimum Pressure (PSI)</label>
+                <input 
+                  type="number" 
+                  id="minPressure" 
+                  v-model="newPump.minPressure" 
+                  required
+                  min="0"
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="efficiency">Efficiency (%)</label>
+              <input 
+                type="number" 
+                id="efficiency" 
+                v-model="newPump.efficiency" 
+                required
+                min="0"
+                max="100"
+              >
+            </div>
           </div>
-          <div class="form-group">
-            <label for="pumpCapacity">Capacity (L/min)</label>
-            <input 
-              type="number" 
-              id="pumpCapacity" 
-              v-model="newPump.capacity" 
-              required
-              min="0"
-              step="0.1"
-            >
+
+          <div class="form-section">
+            <h3>Maintenance Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="installationDate">Installation Date</label>
+                <input 
+                  type="date" 
+                  id="installationDate" 
+                  v-model="newPump.installationDate" 
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label for="lastMaintenance">Last Maintenance</label>
+                <input 
+                  type="date" 
+                  id="lastMaintenance" 
+                  v-model="newPump.lastMaintenance" 
+                  required
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="maintenanceInterval">Maintenance Interval (days)</label>
+              <input 
+                type="number" 
+                id="maintenanceInterval" 
+                v-model="newPump.maintenanceInterval" 
+                required
+                min="1"
+              >
+            </div>
           </div>
+
           <button type="submit" class="add-button">Add Pump</button>
+          <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
         </form>
-        <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
       </div>
 
       <!-- Pumps List -->
@@ -89,7 +225,18 @@ export default {
       newPump: {
         name: '',
         location: '',
-        capacity: ''
+        capacity: '',
+        model: '',
+        manufacturer: '',
+        installationDate: '',
+        powerRating: '', // en kW
+        voltage: '', // en V
+        current: '', // en A
+        maxPressure: '', // en PSI
+        minPressure: '', // en PSI
+        efficiency: '', // en %
+        maintenanceInterval: '', // en días
+        lastMaintenance: ''
       },
       successMessage: '',
       showDeleteModal: false,
@@ -112,7 +259,18 @@ export default {
       this.newPump = {
         name: '',
         location: '',
-        capacity: ''
+        capacity: '',
+        model: '',
+        manufacturer: '',
+        installationDate: '',
+        powerRating: '', // en kW
+        voltage: '', // en V
+        current: '', // en A
+        maxPressure: '', // en PSI
+        minPressure: '', // en PSI
+        efficiency: '', // en %
+        maintenanceInterval: '', // en días
+        lastMaintenance: ''
       };
 
       // Clear success message after 3 seconds
@@ -363,5 +521,26 @@ export default {
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.technical-form {
+  .form-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+
+    h3 {
+      margin: 0 0 1rem;
+      color: #2c3e50;
+      font-size: 1.1rem;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
 }
 </style>

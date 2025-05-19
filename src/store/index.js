@@ -8,7 +8,13 @@ export default createStore({
   },
   getters: {
     isAuthenticated: state => !!state.user,
-    getUserPumps: state => state.pumps.filter(pump => pump.userId === state.user?.id)
+    getUserPumps: state => {
+      // Make sure we have a user and pumps array exists
+      if (!state.user || !Array.isArray(state.pumps)) {
+        return [];
+      }
+      return state.pumps.filter(pump => pump.userId === state.user.id);
+    }
   },
   mutations: {
     setUser(state, user) {
