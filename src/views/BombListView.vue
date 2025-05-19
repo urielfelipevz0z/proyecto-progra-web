@@ -54,10 +54,27 @@
             <h3>{{ pump.name }}</h3>
             <p><strong>Location:</strong> {{ pump.location }}</p>
             <p><strong>Capacity:</strong> {{ pump.capacity }} L/min</p>
-            <button @click="viewPump(pump.id)" class="view-button">
-              View Details
-            </button>
+            <div class="pump-card-actions">
+              <button @click="viewPump(pump.id)" class="view-button">
+                View Details
+              </button>
+              <button @click="confirmDelete(pump)" class="delete-button">
+                Delete
+              </button>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div v-if="showDeleteModal" class="modal-overlay">
+      <div class="modal">
+        <h3>Confirm Delete</h3>
+        <p>Are you sure you want to delete the pump "{{ pumpToDelete?.name }}"?</p>
+        <div class="modal-actions">
+          <button @click="handleDelete" class="delete-button">Delete</button>
+          <button @click="cancelDelete" class="cancel-button">Cancel</button>
         </div>
       </div>
     </div>
@@ -74,7 +91,9 @@ export default {
         location: '',
         capacity: ''
       },
-      successMessage: ''
+      successMessage: '',
+      showDeleteModal: false,
+      pumpToDelete: null
     }
   },
   computed: {
@@ -107,6 +126,33 @@ export default {
     logout() {
       this.$store.dispatch('logout');
       this.$router.push('/login');
+    },
+    confirmDelete(pump) {
+      this.pumpToDelete = pump;
+      this.showDeleteModal = true;
+    },
+    async handleDelete() {
+      if (!this.pumpToDelete) return;
+      
+      try {
+        await this.$store.dispatch('deletePump', this.pumpToDelete.id);
+        this.successMessage = `Pump "${this.pumpToDelete.name}" has been deleted successfully!`;
+        
+        // Limpiar el modal
+        this.showDeleteModal = false;
+        this.pumpToDelete = null;
+
+        // Limpiar mensaje después de 3 segundos
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+      } catch (error) {
+        this.error = error.message;
+      }
+    },
+    cancelDelete() {
+      this.showDeleteModal = false;
+      this.pumpToDelete = null;
     }
   },
   created() {
@@ -195,7 +241,13 @@ export default {
   }
 }
 
-.add-button, .view-button, .logout-button {
+.pump-card-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.add-button, .view-button, .logout-button, .delete-button {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 4px;
@@ -233,6 +285,38 @@ export default {
   }
 }
 
+.delete-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #c82333;
+  }
+}
+
+.cancel-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #5a6268;
+  }
+}
+
 .success-message {
   margin-top: 1rem;
   padding: 0.75rem;
@@ -241,5 +325,43 @@ export default {
   border: 1px solid #d6e9c6;
   border-radius: 4px;
   text-align: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  h3 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+
+  p {
+    margin: 1rem 0;
+    color: #6c757d;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 </style>

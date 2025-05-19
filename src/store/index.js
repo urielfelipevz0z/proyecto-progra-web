@@ -30,6 +30,10 @@ export default createStore({
     addPump(state, pump) {
       state.pumps.push(pump);
       localStorage.setItem('bombs', JSON.stringify(state.pumps));
+    },
+    deletePump(state, pumpId) {
+      state.pumps = state.pumps.filter(pump => pump.id !== pumpId);
+      localStorage.setItem('bombs', JSON.stringify(state.pumps));
     }
   },
   actions: {
@@ -99,6 +103,24 @@ export default createStore({
       };
       commit('addPump', pump);
       return pump;
+    },
+    deletePump({ commit, state }, pumpId) {
+      return new Promise((resolve, reject) => {
+        const pump = state.pumps.find(p => p.id === pumpId);
+        
+        if (!pump) {
+          reject(new Error('Pump not found'));
+          return;
+        }
+
+        if (pump.userId !== state.user.id) {
+          reject(new Error('Unauthorized to delete this pump'));
+          return;
+        }
+
+        commit('deletePump', pumpId);
+        resolve();
+      });
     }
   }
 })
