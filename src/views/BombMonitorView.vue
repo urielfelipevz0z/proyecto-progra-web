@@ -47,11 +47,8 @@
         <div class="info-panel technical-specs">
           <div class="panel-header">
             <h2>Technical Specifications</h2>
-            <div class="toggle-details" @click="showTechnicalDetails = !showTechnicalDetails">
-              {{ showTechnicalDetails ? 'Hide Details' : 'Show Details' }}
-            </div>
           </div>
-          <div class="info-grid" :class="{ 'expanded': showTechnicalDetails }">
+          <div class="info-grid">
             <div class="info-item">
               <label>Nominal Capacity:</label>
               <span>{{ pump.capacity }} L/min</span>
@@ -79,9 +76,6 @@
         <div class="info-panel maintenance-info">
           <div class="panel-header">
             <h2>Maintenance Information</h2>
-            <button @click="scheduleMaintenance" class="schedule-button">
-              Schedule Maintenance
-            </button>
           </div>
           <div class="info-grid">
             <div class="info-item">
@@ -111,14 +105,6 @@
             <div class="header-content">
               <h2>Real-time Performance</h2>
               <span class="last-updated">Last updated: {{ lastUpdated }}</span>
-            </div>
-            <div class="refresh-control">
-              <label>Update interval:</label>
-              <select v-model="refreshInterval">
-                <option value="1000">1 second</option>
-                <option value="5000">5 seconds</option>
-                <option value="10000">10 seconds</option>
-              </select>
             </div>
           </div>
 
@@ -176,31 +162,7 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Modal de Mantenimiento -->
-    <div v-if="showMaintenanceModal" class="modal-overlay" @click.self="showMaintenanceModal = false">
-      <div class="modal">
-        <div class="modal-header">
-          <h3>Schedule Maintenance</h3>
-          <button class="close-button" @click="showMaintenanceModal = false">&times;</button>
-        </div>
-        <div class="modal-content">
-          <div class="form-group">
-            <label>Maintenance Date</label>
-            <input type="date" v-model="maintenanceDate" :min="today">
-          </div>
-          <div class="form-group">
-            <label>Notes</label>
-            <textarea v-model="maintenanceNotes" rows="4"></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button @click="saveMaintenanceSchedule" class="save-button">Save</button>
-          <button @click="showMaintenanceModal = false" class="cancel-button">Cancel</button>
-        </div>
-      </div>
-    </div>
+    </div>  
   </div>
 </template>
 
@@ -241,7 +203,7 @@ export default {
     const showMaintenanceModal = ref(false);
     const maintenanceDate = ref('');
     const maintenanceNotes = ref('');
-    const refreshInterval = ref('5000');
+    const refreshInterval = ref('4000');
     const lastUpdated = ref(new Date().toLocaleTimeString());
     const displayMetrics = ref([]);
     
@@ -249,7 +211,7 @@ export default {
       responsive: true,
       maintainAspectRatio: false,
       animation: {
-        duration: 300
+        duration: 500
       },
       elements: {
         line: {
@@ -658,21 +620,19 @@ export default {
 .back-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  background-color: #42b983;
+  color: white;
   padding: 0.5rem 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
   border-radius: 4px;
-  color: #495057;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #e9ecef;
-  }
 
   i {
-    font-size: 0.9em;
+    margin-right: 0.5rem;
+  }
+
+  &:hover {
+    background-color: #36a76e;
   }
 }
 
