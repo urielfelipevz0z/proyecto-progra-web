@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
+import SignupView from '../views/SignupView.vue'
 import BombListView from '../views/BombListView.vue'
 import BombMonitorView from '../views/BombMonitorView.vue'
 
@@ -12,6 +13,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: LoginView
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: SignupView
   },
   {
     path: '/bombs',
@@ -32,7 +38,7 @@ const router = createRouter({
 
 // Navigation guard to check authentication
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login'];
+  const publicPages = ['/login', '/signup'];
   const authRequired = !publicPages.includes(to.path);
   const user = localStorage.getItem('user');
 

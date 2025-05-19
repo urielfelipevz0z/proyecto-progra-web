@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     user: JSON.parse(localStorage.getItem('user') || 'null'),
+    users: JSON.parse(localStorage.getItem('users') || '[]'),
     pumps: JSON.parse(localStorage.getItem('bombs') || '[]')
   },
   getters: {
@@ -18,6 +19,10 @@ export default createStore({
       state.user = null;
       localStorage.removeItem('user');
     },
+    addUser(state, user) {
+      state.users.push(user);
+      localStorage.setItem('users', JSON.stringify(state.users));
+    },
     setPumps(state, pumps) {
       state.pumps = pumps;
       localStorage.setItem('bombs', JSON.stringify(pumps));
@@ -28,13 +33,60 @@ export default createStore({
     }
   },
   actions: {
-    login({ commit }, credentials) {
-      // In a real application, this would make an API call
-      const user = {
-        id: Date.now(),
-        username: credentials.username
-      };
-      commit('setUser', user);
+    signup({ commit, state }, userData) {
+      return new Promise((resolve, reject) => {
+        // Verificar si el usuario ya existe
+        const userExists = state.users.some(
+          u => u.username === userData.username || u.email === userData.email
+        );
+
+        if (userExists) {
+          reject(new Error('Username or email already exists'));
+          return;
+        }
+
+        // Crear nuevo usuario
+        const user = {
+          id: Date.now(),
+          username: userData.username,
+          email: userData.email,
+          password: userData.password // En una aplicación real, esto debería estar hasheado
+        };
+
+        // Guardar usuario
+        commit('addUser', user);
+        
+        // Iniciar sesión automáticamente
+        const sessionUser = {
+          id: user.id,
+          username: user.username,
+          email: user.email
+        };
+        commit('setUser', sessionUser);
+        resolve(sessionUser);
+      });
+    },
+    login({ commit, state }, credentials) {
+      return new Promise((resolve, reject) => {
+        // Buscar usuario
+        const user = state.users.find(
+          u => u.username === credentials.username && u.password === credentials.password
+        );
+
+        if (!user) {
+          reject(new Error('Invalid credentials'));
+          return;
+        }
+
+        // Crear sesión
+        const sessionUser = {
+          id: user.id,
+          username: user.username,
+          email: user.email
+        };
+        commit('setUser', sessionUser);
+        resolve(sessionUser);
+      });
     },
     logout({ commit }) {
       commit('clearUser');

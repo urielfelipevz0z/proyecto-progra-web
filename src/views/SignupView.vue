@@ -1,7 +1,7 @@
 <template>
-  <div class="login-view">
-    <form @submit.prevent="handleLogin" class="login-form">
-      <h2>Login</h2>
+  <div class="signup-view">
+    <form @submit.prevent="handleSignup" class="signup-form">
+      <h2>Create Account</h2>
       <div class="form-group">
         <label for="username">Username</label>
         <input 
@@ -9,7 +9,17 @@
           id="username" 
           v-model="username" 
           required
-          placeholder="Enter username"
+          placeholder="Choose a username"
+        >
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          v-model="email" 
+          required
+          placeholder="Enter your email"
         >
       </div>
       <div class="form-group">
@@ -19,14 +29,26 @@
           id="password" 
           v-model="password" 
           required
-          placeholder="Enter password"
+          placeholder="Choose a password"
+          minlength="6"
         >
       </div>
-      <button type="submit" class="login-button">Login</button>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          v-model="confirmPassword" 
+          required
+          placeholder="Confirm your password"
+          minlength="6"
+        >
+      </div>
+      <button type="submit" class="signup-button">Sign Up</button>
       <p v-if="error" class="error">{{ error }}</p>
-      <p class="signup-link">
-        Don't have an account? 
-        <router-link to="/signup">Sign up</router-link>
+      <p class="login-link">
+        Already have an account? 
+        <router-link to="/login">Log in</router-link>
       </p>
     </form>
   </div>
@@ -34,28 +56,43 @@
 
 <script>
 export default {
-  name: 'LoginView',
+  name: 'SignupView',
   data() {
     return {
       username: '',
+      email: '',
       password: '',
+      confirmPassword: '',
       error: ''
     }
   },
   methods: {
-    async handleLogin() {
-      if (this.username && this.password) {
-        try {
-          await this.$store.dispatch('login', {
-            username: this.username,
-            password: this.password
-          });
-          this.$router.push('/bombs');
-        } catch (error) {
-          this.error = 'Login failed. Please try again.';
-        }
-      } else {
+    async handleSignup() {
+      // Validaciones básicas
+      if (!this.username || !this.email || !this.password || !this.confirmPassword) {
         this.error = 'Please fill in all fields';
+        return;
+      }
+
+      if (this.password !== this.confirmPassword) {
+        this.error = 'Passwords do not match';
+        return;
+      }
+
+      if (this.password.length < 6) {
+        this.error = 'Password must be at least 6 characters long';
+        return;
+      }
+
+      try {
+        await this.$store.dispatch('signup', {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        });
+        this.$router.push('/bombs');
+      } catch (error) {
+        this.error = error.message || 'Registration failed. Please try again.';
       }
     }
   },
@@ -68,7 +105,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login-view {
+.signup-view {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +113,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-.login-form {
+.signup-form {
   background: white;
   padding: 2rem;
   border-radius: 8px;
@@ -114,7 +151,7 @@ export default {
   }
 }
 
-.login-button {
+.signup-button {
   width: 100%;
   padding: 0.75rem;
   background-color: #42b983;
@@ -136,7 +173,7 @@ export default {
   margin-top: 1rem;
 }
 
-.signup-link {
+.login-link {
   text-align: center;
   margin-top: 1rem;
   color: #6c757d;
