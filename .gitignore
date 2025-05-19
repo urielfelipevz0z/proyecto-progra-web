@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+.github/copilot-instructions.md
 
 # local env files
 .env.local
