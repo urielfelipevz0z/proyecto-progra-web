@@ -3,7 +3,6 @@
     <header class="header">
       <div class="header-left">
         <button @click="goBack" class="back-button">
-          <i class="fas fa-arrow-left"></i>
           Back
         </button>
         <h1>Pump Monitor: {{ pump?.name }}</h1>
@@ -618,21 +617,16 @@ export default {
 }
 
 .back-button {
-  display: flex;
-  align-items: center;
-  background-color: #42b983;
+  background-color: #0b5d38;
   color: white;
+  border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  font-size: 1rem;
   cursor: pointer;
-
-  i {
-    margin-right: 0.5rem;
-  }
+  font-size: 1rem;
 
   &:hover {
-    background-color: #36a76e;
+    background-color: #36a76a;
   }
 }
 
