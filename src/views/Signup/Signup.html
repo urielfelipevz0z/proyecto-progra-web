@@ -1,0 +1,53 @@
+<div class="signup-view">
+    <form @submit.prevent="handleSignup" class="signup-form">
+      <h2>Create Account</h2>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          v-model="username" 
+          required
+          placeholder="Choose a username"
+        >
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          v-model="email" 
+          required
+          placeholder="Enter your email"
+        >
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          v-model="password" 
+          required
+          placeholder="Choose a password"
+          minlength="6"
+        >
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          v-model="confirmPassword" 
+          required
+          placeholder="Confirm your password"
+          minlength="6"
+        >
+      </div>
+      <button type="submit" class="signup-button">Sign Up</button>
+      <p v-if="error" class="error">{{ error }}</p>
+      <p class="login-link">
+        Already have an account? 
+        <router-link to="/login">Log in</router-link>
+      </p>
+    </form>
+  </div>

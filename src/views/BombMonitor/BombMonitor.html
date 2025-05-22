@@ -1,0 +1,163 @@
+<div class="bomb-monitor">
+    <header class="header">
+      <div class="header-left">
+        <button @click="goBack" class="back-button">
+          Back
+        </button>
+        <h1>Pump Monitor: {{ pump?.name }}</h1>
+      </div>
+      <div class="header-right">
+        <div class="operational-badge" :class="metrics.isOperating ? 'operational' : 'stopped'">
+          {{ metrics.isOperating ? 'Operational' : 'Stopped' }}
+        </div>
+      </div>
+    </header>
+
+    <div class="monitor-content" v-if="pump">
+      <div class="info-sections">
+        <!-- Basic Information Panel -->
+        <div class="info-panel basic-info">
+          <div class="panel-header">
+            <h2>Basic Information</h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Name:</label>
+              <span>{{ pump.name }}</span>
+            </div>
+            <div class="info-item">
+              <label>Location:</label>
+              <span>{{ pump.location }}</span>
+            </div>
+            <div class="info-item">
+              <label>Manufacturer:</label>
+              <span>{{ pump.manufacturer }}</span>
+            </div>
+            <div class="info-item">
+              <label>Model:</label>
+              <span>{{ pump.model }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Specifications Panel -->
+        <div class="info-panel technical-specs">
+          <div class="panel-header">
+            <h2>Technical Specifications</h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nominal Capacity:</label>
+              <span>{{ pump.capacity }} L/min</span>
+            </div>
+            <div class="info-item">
+              <label>Power Rating:</label>
+              <span>{{ pump.powerRating }} kW</span>
+            </div>
+            <div class="info-item">
+              <label>Voltage:</label>
+              <span>{{ pump.voltage }} V</span>
+            </div>
+            <div class="info-item">
+              <label>Current:</label>
+              <span>{{ pump.current }} A</span>
+            </div>
+            <div class="info-item">
+              <label>Efficiency:</label>
+              <span>{{ pump.efficiency }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Maintenance Panel -->
+        <div class="info-panel maintenance-info">
+          <div class="panel-header">
+            <h2>Maintenance Information</h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Installation Date:</label>
+              <span>{{ formatDate(pump.installationDate) }}</span>
+            </div>
+            <div class="info-item">
+              <label>Last Maintenance:</label>
+              <span>{{ formatDate(pump.lastMaintenance) }}</span>
+            </div>
+            <div class="info-item">
+              <label>Next Maintenance:</label>
+              <span>{{ calculateNextMaintenance }}</span>
+            </div>
+            <div class="info-item maintenance-status">
+              <label>Status:</label>
+              <span :class="getMaintenanceStatusClass">
+                {{ daysUntilMaintenance }} days until next maintenance
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Monitor Panel -->
+        <div class="info-panel performance-monitor">
+          <div class="panel-header">
+            <div class="header-content">
+              <h2>Real-time Performance</h2>
+              <span class="last-updated">Last updated: {{ lastUpdated }}</span>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div v-for="(metric, index) in displayMetrics" :key="index" 
+                 class="metric-card" :class="[metric.statusClass, { 'warning': metric.status === 'Warning' }]">
+              <div class="metric-header">
+                <h3>{{ metric.title }}</h3>
+                <div class="metric-status-badge" :class="metric.statusClass">
+                  {{ metric.status }}
+                </div>
+              </div>
+              
+              <div class="metric-content">
+                <div class="metric-info">
+                  <div class="metric-value">{{ metric.value }}</div>
+                  <div class="metric-details">
+                    <div class="metric-range" v-if="metric.range">
+                      <span>Range: {{ metric.range }}</span>
+                    </div>
+                    <div class="metric-trend" v-if="metric.trend">
+                      <span :class="metric.trend.direction">
+                        {{ metric.trend.value }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="metric-chart">
+                  <div class="chart-container">
+                    <LineChart 
+                      v-if="metric.history && metric.history.length > 0"
+                      :chartData="{
+                        labels: metric.history.map(h => h.time),
+                        datasets: [{
+                          label: metric.title,
+                          data: metric.history.map(h => h.value),
+                          borderColor: '#42b983',
+                          tension: 0.1,
+                          fill: false,
+                          pointRadius: 2,
+                          borderWidth: 2
+                        }]
+                      }"
+                      :chartOptions="chartOptions"
+                      class="chart"
+                    />
+                    <div v-else class="no-data">
+                      Collecting data...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
