@@ -20,7 +20,6 @@
         <div class="info-panel basic-info">
           <div class="panel-header">
             <h2>Basic Information</h2>
-            <span class="last-updated">Last updated: {{ lastUpdated }}</span>
           </div>
           <div class="info-grid">
             <div class="info-item">
@@ -617,7 +616,7 @@ export default {
 }
 
 .back-button {
-  background-color: #0b5d38;
+  background-color: #e74c3c;;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -626,7 +625,8 @@ export default {
   font-size: 1rem;
 
   &:hover {
-    background-color: #36a76a;
+    background-color: #c0392b;
+    transform: translateY(-2px);
   }
 }
 
@@ -657,11 +657,49 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.info-panel.performance-monitor {
+  grid-column: 1 / -1;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+    
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
 .info-panel {
   background: white;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.basic-info {
+    background-color: #f9f9f9;
+    border-left: 4px solid #42b983;
+  }
+
+  &.technical-specs {
+    background-color: #f9f9f9;
+    border-left: 4px solid #007bff;
+  }
+
+  &.maintenance-info {
+    background-color: #f9f9f9;
+    border-left: 4px solid #ffc107;
+  }
 }
 
 .panel-header {
@@ -717,30 +755,29 @@ export default {
   .panel-header {
     .header-content {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
     }
   }
 }
 
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   margin-top: 1rem;
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .metric-card {
-  background: white;
+  background-color: white;
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
 
   &.status-critical {
     border-left: 4px solid #dc3545;
@@ -762,9 +799,9 @@ export default {
   margin-bottom: 1rem;
 
   h3 {
-    color: #2c3e50;
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    color: #2c3e50;
   }
 }
 
@@ -797,7 +834,10 @@ export default {
 }
 
 .metric-info {
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .metric-value {

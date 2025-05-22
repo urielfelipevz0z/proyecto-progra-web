@@ -78,7 +78,7 @@
                   v-model="newPump.powerRating" 
                   required
                   min="0"
-                  step="0.1"
+                  step="any"
                 >
               </div>
             </div>
@@ -102,7 +102,7 @@
                   v-model="newPump.current" 
                   required
                   min="0"
-                  step="0.1"
+                  step="any"
                 >
               </div>
             </div>

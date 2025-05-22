@@ -113,8 +113,4 @@ La aplicación utiliza LocalStorage para persistir:
   - No se agrega encriptación de contraseñas
   - No se implementan tokens JWT para autenticación
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-Para más información sobre la configuración de Vue.js, consulta la [Documentación de Vue CLI](https://cli.vuejs.org/config/).
+[Documentación de Vue CLI](https://cli.vuejs.org/config/).
