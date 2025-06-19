@@ -1,0 +1,47 @@
+# Configuración de Git para el proyecto de monitoreo de bombas
+
+# Normalización de finales de línea
+* text=auto
+*.js text eol=lf
+*.vue text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.sql text eol=lf
+
+# Archivos binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Configuración del proyecto
+.env merge=ours
+.env.* merge=ours
+package-lock.json merge=ours
+
+# Archivos generados - excluir de estadísticas
+dist/* linguist-generated
+build/* linguist-generated
+node_modules/* linguist-vendored
+coverage/* linguist-generated
+
+# Documentación
+*.md linguist-documentation
+README.md linguist-documentation
+INTEGRATION.md linguist-documentation
+PROJECT_SUMMARY.md linguist-documentation
+
+# Configuración de backend/frontend
+backend/migrations/* linguist-vendored
+backend/seeders/* linguist-vendored
+
+# Prevenir merge conflicts en logs
+*.log merge=ours
+
+# Scripts ejecutables
+*.sh text eol=lf
